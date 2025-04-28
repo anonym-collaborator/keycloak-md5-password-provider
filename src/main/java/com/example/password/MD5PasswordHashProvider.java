@@ -35,14 +35,14 @@ public class MD5PasswordHashProvider implements PasswordHashProvider {
 	public boolean verify(String rawPassword, PasswordCredentialModel credential) {
 		String encodedPassword = this.encode(rawPassword, credential.getPasswordCredentialData().getHashIterations());
 		String hash = credential.getPasswordSecretData().getValue();
-		return encodedPassword.equals(hash);
+		return encodedPassword.equalsIgnoreCase(hash);
 	}
 
 	@Override
 	public String encode(String rawPassword, int iterations) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] digest = md.digest(password.getBytes(StandardCharsets.US_ASCII));
+            byte[] digest = md.digest(rawPassword.getBytes(StandardCharsets.US_ASCII));
             return bytesToHex(digest).toLowerCase();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("MD5 Algorithm not found", e);
